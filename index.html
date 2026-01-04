@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Blue Gem Lock - Growtopia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+        
+        .btn-info {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .employee-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .employee-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .employee-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .employee-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .employee-balance {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .balance-positive {
+            color: #48bb78;
+        }
+        
+        .balance-negative {
+            color: #f56565;
+        }
+        
+        .employee-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .employee-actions button {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .transaction-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .transaction-deposit {
+            border-left-color: #48bb78;
+        }
+        
+        .transaction-withdraw {
+            border-left-color: #f56565;
+        }
+        
+        .transaction-info {
+            flex: 1;
+        }
+        
+        .transaction-date {
+            font-size: 12px;
+            color: #718096;
+        }
+        
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .amount-positive {
+            color: #48bb78;
+        }
+        
+        .amount-negative {
+            color: #f56565;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #718096;
+            padding: 0;
+            width: auto;
+        }
+        
+        .close-btn:hover {
+            color: #2d3748;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.3);
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💎 Sistem Blue Gem Lock - Growtopia</h1>
+            <p>Kelola BGL worker Anda</p>
+        </div>
+        
+        <div class="content">
+            <!-- Tambah Worker -->
+            <div class="section">
+                <h2 class="section-title">➕ Tambah Worker Baru</h2>
+                <div class="form-group">
+                    <label>Nama Worker</label>
+                    <input type="text" id="employeeName" placeholder="Masukkan nama worker">
+                </div>
+                <button class="btn-primary" onclick="addEmployee()">Tambah Worker</button>
+            </div>
+            
+            <!-- Transaksi -->
+            <div class="section">
+                <h2 class="section-title">💰 Transaksi</h2>
+                <div class="form-group">
+                    <label>Pilih Worker</label>
+                    <select id="transactionEmployee">
+                        <option value="">-- Pilih Worker --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah (BGL)</label>
+                    <input type="number" id="transactionAmount" placeholder="0" min="0" step="0.01">
+                </div>
+                <div class="btn-group">
+                    <button class="btn-success" onclick="addTransaction('deposit')">💵 Deposit</button>
+                    <button class="btn-danger" onclick="addTransaction('withdraw')">💸 Penarikan</button>
+                </div>
+            </div>
+            
+            <!-- Tombol Total & Reset All -->
+            <div class="section">
+                <div class="btn-group">
+                    <button class="btn-info" onclick="showTotalSummary()">📊 Lihat Total Keseluruhan</button>
+                    <button class="btn-danger" onclick="resetAllEmployees()">🔄 Reset Semua Modal</button>
+                </div>
+            </div>
+            
+            <!-- Daftar Worker -->
+            <div class="section">
+                <h2 class="section-title">👥 Daftar Worker</h2>
+                <div class="employee-list" id="employeeList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Detail Transaksi -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Riwayat Transaksi</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="transaction-list" id="transactionList"></div>
+        </div>
+    </div>
+    
+    <!-- Modal Total Summary -->
+    <div class="modal" id="summaryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📊 Ringkasan Total</h3>
+                <button class="close-btn" onclick="closeSummaryModal()">&times;</button>
+            </div>
+            <div class="summary-box" id="summaryContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let employees = {};
+        
+        // Load data dari localStorage
+        function loadData() {
+            const saved = localStorage.getItem('employeeData');
+            if (saved) {
+                employees = JSON.parse(saved);
+            }
+            updateUI();
+        }
+        
+        // Save data ke localStorage
+        function saveData() {
+            localStorage.setItem('employeeData', JSON.stringify(employees));
+        }
+        
+        // Tambah worker baru
+        function addEmployee() {
+            const name = document.getElementById('employeeName').value.trim();
+            if (!name) {
+                alert('Nama worker tidak boleh kosong!');
+                return;
+            }
+            
+            if (employees[name]) {
+                alert('Worker sudah ada!');
+                return;
+            }
+            
+            employees[name] = {
+                balance: 0,
+                transactions: []
+            };
+            
+            document.getElementById('employeeName').value = '';
+            saveData();
+            updateUI();
+        }
+        
+        // Tambah transaksi
+        function addTransaction(type) {
+            const employeeName = document.getElementById('transactionEmployee').value;
+            const amount = parseFloat(document.getElementById('transactionAmount').value);
+            
+            if (!employeeName) {
+                alert('Pilih worker terlebih dahulu!');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                alert('Masukkan jumlah yang valid!');
+                return;
+            }
+            
+            const transaction = {
+                type: type,
+                amount: amount,
+                date: new Date().toLocaleString('id-ID')
+            };
+            
+            if (type === 'deposit') {
+                employees[employeeName].balance += amount;
+            } else {
+                employees[employeeName].balance -= amount;
+            }
+            
+            employees[employeeName].transactions.unshift(transaction);
+            
+            document.getElementById('transactionAmount').value = '';
+            saveData();
+            updateUI();
+        }
+        
+        // Update UI
+        function updateUI() {
+            updateEmployeeList();
+            updateTransactionSelect();
+        }
+        
+        // Update daftar worker
+        function updateEmployeeList() {
+            const list = document.getElementById('employeeList');
+            list.innerHTML = '';
+            
+            for (const [name, data] of Object.entries(employees)) {
+                const card = document.createElement('div');
+                card.className = 'employee-card';
+                
+                const balanceClass = data.balance >= 0 ? 'balance-positive' : 'balance-negative';
+                const balanceSign = data.balance >= 0 ? '+' : '';
+                
+                card.innerHTML = `
+                    <div class="employee-name">${name}</div>
+                    <div class="employee-balance ${balanceClass}">
+                        ${balanceSign}${data.balance.toLocaleString('id-ID')} BGL
+                    </div>
+                    <div style="font-size: 12px; color: #718096; margin-top: 5px;">
+                        ${data.transactions.length} transaksi
+                    </div>
+                    <div class="employee-actions">
+                        <button class="btn-info" onclick="showTransactions('${name}')">📋 Riwayat</button>
+                        <button class="btn-danger" onclick="resetEmployee('${name}')" style="flex: 0.7;">🔄 Reset</button>
+                        <button class="btn-danger" onclick="deleteEmployee('${name}')" style="flex: 0.5;">🗑️</button>
+                    </div>
+                `;
+                
+                list.appendChild(card);
+            }
+        }
+        
+        // Update select transaksi
+        function updateTransactionSelect() {
+            const select = document.getElementById('transactionEmployee');
+            select.innerHTML = '<option value="">-- Pilih Worker --</option>';
+            
+            for (const name of Object.keys(employees)) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            }
+        }
+        
+        // Tampilkan riwayat transaksi
+        function showTransactions(name) {
+            const modal = document.getElementById('transactionModal');
+            const title = document.getElementById('modalTitle');
+            const list = document.getElementById('transactionList');
+            
+            title.textContent = `Riwayat Transaksi - ${name}`;
+            list.innerHTML = '';
+            
+            const transactions = employees[name].transactions;
+            
+            if (transactions.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #718096;">Belum ada transaksi</p>';
+            } else {
+                // Hitung total deposit dan penarikan
+                let totalDeposit = 0;
+                let totalWithdraw = 0;
+                
+                transactions.forEach(t => {
+                    if (t.type === 'deposit') {
+                        totalDeposit += t.amount;
+                    } else {
+                        totalWithdraw += t.amount;
+                    }
+                });
+                
+                const difference = totalDeposit - totalWithdraw;
+                const winner = difference >= 0 ? 'Setor' : 'Ambil';
+                
+                // Tampilkan summary box
+                const summaryBox = document.createElement('div');
+                summaryBox.style.cssText = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;';
+                summaryBox.innerHTML = `
+                    <div style="font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                        📊 Ringkasan ${name}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>💵 Total Setor:</span>
+                        <span style="font-weight: bold;">${totalDeposit.toLocaleString('id-ID')} BGL</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>💸 Total Ambil:</span>
+                        <span style="font-weight: bold;">${totalWithdraw.toLocaleString('id-ID')} BGL</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid rgba(255,255,255,0.3); font-size: 18px; font-weight: bold;">
+                        <span>🏆 Selisih:</span>
+                        <span>${difference >= 0 ? '+' : ''}${difference.toLocaleString('id-ID')} BGL</span>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px; font-size: 14px; background: rgba(255,255,255,0.2); padding: 8px; border-radius: 5px;">
+                        ${winner} lebih banyak ${Math.abs(difference).toLocaleString('id-ID')} BGL
+                    </div>
+                `;
+                list.appendChild(summaryBox);
+                
+                // Tampilkan transaksi
+                transactions.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = `transaction-item transaction-${t.type}`;
+                    
+                    const amountClass = t.type === 'deposit' ? 'amount-positive' : 'amount-negative';
+                    const amountSign = t.type === 'deposit' ? '+' : '-';
+                    
+                    item.innerHTML = `
+                        <div class="transaction-info">
+                            <div style="font-weight: 600; color: #2d3748; margin-bottom: 5px;">
+                                ${t.type === 'deposit' ? '💵 Setor' : '💸 Ambil'}
+                            </div>
+                            <div class="transaction-date">${t.date}</div>
+                        </div>
+                        <div class="transaction-amount ${amountClass}">
+                            ${amountSign}${t.amount.toLocaleString('id-ID')} BGL
+                        </div>
+                    `;
+                    
+                    list.appendChild(item);
+                });
+            }
+            
+            modal.classList.add('active');
+        }
+        
+        // Tutup modal
+        function closeModal() {
+            document.getElementById('transactionModal').classList.remove('active');
+        }
+        
+        // Hapus worker
+        function deleteEmployee(name) {
+            if (confirm(`Yakin ingin menghapus ${name}?`)) {
+                delete employees[name];
+                saveData();
+                updateUI();
+            }
+        }
+        
+        // Reset worker (hapus semua transaksi, saldo jadi 0)
+        function resetEmployee(name) {
+            if (confirm(`Yakin ingin reset semua transaksi ${name}?\nSaldo akan kembali ke 0 BGL`)) {
+                employees[name].balance = 0;
+                employees[name].transactions = [];
+                saveData();
+                updateUI();
+            }
+        }
+        
+        // Reset semua worker sekaligus
+        function resetAllEmployees() {
+            if (Object.keys(employees).length === 0) {
+                alert('Tidak ada worker untuk direset!');
+                return;
+            }
+            
+            const employeeCount = Object.keys(employees).length;
+            if (confirm(`⚠️ PERHATIAN!\n\nYakin ingin reset SEMUA modal ${employeeCount} worker?\n\n✓ Semua transaksi akan terhapus\n✓ Semua saldo kembali ke 0 BGL\n✓ Data worker tetap ada\n\nTindakan ini TIDAK BISA dibatalkan!`)) {
+                for (const name in employees) {
+                    employees[name].balance = 0;
+                    employees[name].transactions = [];
+                }
+                saveData();
+                updateUI();
+                alert(`✅ Berhasil reset ${employeeCount} worker!\nSemua saldo kembali ke 0 BGL`);
+            }
+        }
+        
+        // Tampilkan total summary
+        function showTotalSummary() {
+            const content = document.getElementById('summaryContent');
+            
+            // Buat list worker dengan saldo masing-masing
+            let employeeListHTML = '';
+            const sortedEmployees = Object.entries(employees).sort((a, b) => b[1].balance - a[1].balance);
+            
+            if (sortedEmployees.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                        <div style="font-size: 18px;">Belum ada worker</div>
+                    </div>
+                `;
+            } else {
+                sortedEmployees.forEach(([name, data]) => {
+                    const balanceClass = data.balance >= 0 ? 'amount-positive' : 'amount-negative';
+                    const balanceSign = data.balance >= 0 ? '+' : '';
+                    
+                    employeeListHTML += `
+                        <div style="display: flex; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.15); border-radius: 8px; margin-bottom: 10px;">
+                            <span style="font-weight: 600; font-size: 16px;">${name}</span>
+                            <span style="font-weight: bold; font-size: 18px;" class="${balanceClass}">
+                                ${balanceSign}${data.balance.toLocaleString('id-ID')} BGL
+                            </span>
+                        </div>
+                    `;
+                });
+                
+                // Hitung total keseluruhan
+                let grandTotal = 0;
+                sortedEmployees.forEach(([name, data]) => {
+                    grandTotal += data.balance;
+                });
+                
+                const totalClass = grandTotal >= 0 ? 'amount-positive' : 'amount-negative';
+                const totalSign = grandTotal >= 0 ? '+' : '';
+                
+                content.innerHTML = `
+                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 15px;">
+                        💼 Saldo Per Worker
+                    </div>
+                    ${employeeListHTML}
+                    <div style="display: flex; justify-content: space-between; padding: 20px 15px; background: rgba(255,255,255,0.25); border-radius: 8px; margin-top: 20px; font-size: 20px; font-weight: bold;">
+                        <span>🏆 TOTAL KESELURUHAN</span>
+                        <span class="${totalClass}">
+                            ${totalSign}${grandTotal.toLocaleString('id-ID')} BGL
+                        </span>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('summaryModal').classList.add('active');
+        }
+        
+        // Tutup summary modal
+        function closeSummaryModal() {
+            document.getElementById('summaryModal').classList.remove('active');
+        }
+        
+        // Tutup modal saat klik di luar
+        window.onclick = function(event) {
+            const transModal = document.getElementById('transactionModal');
+            const summModal = document.getElementById('summaryModal');
+            if (event.target === transModal) {
+                closeModal();
+            }
+            if (event.target === summModal) {
+                closeSummaryModal();
+            }
+        }
+        
+        // Load data saat halaman dibuka
+        loadData();
+    </script>
+</body>
+</html>
